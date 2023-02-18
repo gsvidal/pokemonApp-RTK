@@ -5,13 +5,33 @@ import { getPokemons } from './store/slices/pokemon';
 
 function App() {
   const dispatch = useDispatch();
-  const isLoading = useSelector((state) => state.pokemon.isLoading);
+  const { isLoading, pokemons, page } = useSelector((state) => state.pokemon);
 
   useEffect(() => {
     dispatch(getPokemons());
   }, []);
 
-  return <div className="App">{isLoading && <p>Loading...</p>}</div>;
+  const handleGetPokemons = () => {
+    dispatch(getPokemons(page));
+  };
+
+  return (
+    <div className="App">
+      <h1>Pokemon App</h1>
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul>
+          {pokemons.map((pokemon) => (
+            <li key={pokemon.url}>{pokemon.name}</li>
+          ))}
+        </ul>
+      )}
+      <button disabled={isLoading} onClick={handleGetPokemons}>
+        Next Page
+      </button>
+    </div>
+  );
 }
 
 export default App;
